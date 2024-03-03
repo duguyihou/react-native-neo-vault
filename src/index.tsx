@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
+import type { Options, Result, UserCredentials } from './types';
 
 const LINKING_ERROR =
   `The package 'react-native-neo-vault' doesn't seem to be linked. Make sure: \n\n` +
@@ -17,6 +18,46 @@ const NeoVault = NativeModules.NeoVault
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return NeoVault.multiply(a, b);
+export function setGenericPassword(
+  password: string,
+  account: string,
+  options?: string | Partial<Options>
+): Promise<false | Result> {
+  const normalizedOption = (() => {
+    if (typeof options === 'string') {
+      return { service: options };
+    }
+    return options ?? {};
+  })();
+  return NeoVault.setGenericPassword(password, account, normalizedOption);
 }
+
+export function getGenericPassword(
+  options?: string | Partial<Options>
+): Promise<false | UserCredentials> {
+  const normalizedOption = (() => {
+    if (typeof options === 'string') {
+      return { service: options };
+    }
+    return options ?? {};
+  })();
+  return NeoVault.getGenericPassword(normalizedOption);
+}
+
+export function resetGenericPassword(
+  options?: string | Partial<Options>
+): Promise<boolean> {
+  const normalizedOption = (() => {
+    if (typeof options === 'string') {
+      return { service: options };
+    }
+    return options ?? {};
+  })();
+  return NeoVault.resetGenericPassword(normalizedOption);
+}
+
+export function getAllGenericPasswords(): Promise<string[]> {
+  return NeoVault.getAllGenericPasswords();
+}
+
+export default NeoVault;

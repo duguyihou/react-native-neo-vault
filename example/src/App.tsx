@@ -1,18 +1,23 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-neo-vault';
+import { StyleSheet, View, Text, Button } from 'react-native';
+import { getGenericPassword, setGenericPassword } from 'react-native-neo-vault';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const handleSetGenericPassword = async () => {
+    const result = await setGenericPassword('password', 'account');
+    console.log(`🐵 ------ result`, result);
+  };
+  const handleGetGenericPassword = async () => {
+    const result = await getGenericPassword();
+    console.log(`🐵 ------ result`, result);
+  };
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text style={styles.text}>React Native Neo Vault</Text>
+      <Button title="Set Generic Password" onPress={handleSetGenericPassword} />
+      <Button title="Get Generic Password" onPress={handleGetGenericPassword} />
     </View>
   );
 }
@@ -23,9 +28,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+
+  text: {
+    fontSize: 32,
+  },
+  button: {
+    fontSize: 20,
+    padding: 10,
   },
 });
